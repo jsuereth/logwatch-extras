@@ -27,18 +27,21 @@ while (my $line = <STDIN>) {
 #--------------------------------
 # Print authentication results  
 #--------------------------------
-foreach my $user (keys %authentications) {
-	my $total = 0;
-
-	my $tmp = $authentications{$user};
-	foreach my $domain (keys %{$tmp}) {
-		$total += $authentications{$user}{$domain};		
-	}		
-	print "Authenticated user [${user}] ${total} times...\n" if $detail > 0;
+if((length keys %authentications) > 0) {
+	print "Successful Authentications:\n";
+	foreach my $user (keys %authentications) {
+		my $total = 0;
 	
-	if( $detail > 7 ) {
+		my $tmp = $authentications{$user};
 		foreach my $domain (keys %{$tmp}) {
-			print "\t[${user}] authenticated from [${domain}] ${authentications{$user}{$domain}} times\n"			
-		}			
+			$total += $authentications{$user}{$domain};		
+		}		
+		print "\t${user} (${total} time(s))\n" if $detail > 0;
+		
+		if( $detail > 7 ) {
+			foreach my $domain (keys %{$tmp}) {
+				print "\t\tfrom [${domain}] (${authentications{$user}{$domain}} times(s))\n"			
+			}			
+		}
 	}
 }
